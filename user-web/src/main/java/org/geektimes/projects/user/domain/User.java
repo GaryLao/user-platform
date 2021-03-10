@@ -35,7 +35,7 @@ public class User implements Serializable {
     //@Max(32)
     //@Min(6)
     @Pattern(regexp = "^.{6,32}$", message = "密码长度错误，最少6位，最多32位")
-    @Length(min = 6, max = 32)
+    //@Length(min = 6, max = 32)
     private String password;
 
     @Column
@@ -43,7 +43,7 @@ public class User implements Serializable {
 
     @Column
     @Pattern(regexp = "^1[3456789]\\d{9}$", message = "手机号码格式错误")
-    @Length(min = 11, max = 11)
+    //@Length(min = 11, max = 11)
     private String phoneNumber;
 
     public Long getId() {

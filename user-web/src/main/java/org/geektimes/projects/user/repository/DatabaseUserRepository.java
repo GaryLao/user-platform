@@ -1,10 +1,13 @@
 package org.geektimes.projects.user.repository;
 
-import org.geektimes.function.ThrowableFunction;
-import org.geektimes.context.ComponentContext;
+import org.geektimes.web.mvc.function.ThrowableFunction;
+import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -33,13 +36,22 @@ public class DatabaseUserRepository implements UserRepository {
 
     public static final String QUERY_ALL_USERS_DML_SQL = "SELECT id,name,password,email,phoneNumber FROM users";
 
-    private final DBConnectionManager dbConnectionManager;
+    private DBConnectionManager dbConnectionManager;
 
     public DatabaseUserRepository() {
         this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
     }
 
+    @PostConstruct
+    public void init() {
+        this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
+    }
+
     private Connection getConnection() {
+        //if (this.dbConnectionManager == null){
+        //    this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
+        //}
+
         return dbConnectionManager.getConnection();
     }
 
@@ -63,6 +75,7 @@ public class DatabaseUserRepository implements UserRepository {
         return null;
     }
 
+    //lzm add 2021-03-10 22:22:33
     @Override
     public User getByName(String userName) {
         return executeQuery("SELECT id,name,password,email,phoneNumber FROM users WHERE name=?",
@@ -140,7 +153,7 @@ public class DatabaseUserRepository implements UserRepository {
                 // Boolean -> boolean
                 String methodName = preparedStatementMethodMappings.get(argType);
                 Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);
-                method.invoke(preparedStatement, i + 1, args);
+                method.invoke(preparedStatement, i + 1, args[i]);
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             // 返回一个 POJO List -> ResultSet -> POJO List

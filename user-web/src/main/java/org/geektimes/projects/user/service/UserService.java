@@ -35,5 +35,8 @@ public interface UserService {
 
     User queryUserById(Long id);
 
+    //lzm add 2021-03-10 22:22:33
+    User queryUserByName(String name);
+
     User queryUserByNameAndPassword(String name, String password);
 }

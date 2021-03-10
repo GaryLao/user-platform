@@ -1,7 +1,8 @@
-package org.geektimes.context;
+package org.geektimes.web.mvc.context;
 
-import org.geektimes.function.ThrowableAction;
-import org.geektimes.function.ThrowableFunction;
+import org.geektimes.web.mvc.controller.Controller;
+import org.geektimes.web.mvc.function.ThrowableAction;
+import org.geektimes.web.mvc.function.ThrowableFunction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -41,6 +42,14 @@ public class ComponentContext {
 
     private Map<String, Object> componentsMap = new LinkedHashMap<>();
 
+    //lzm add 2021-03-10 22:59:52
+    private List<Controller> controllers = new ArrayList<>();
+
+    //lzm add 2021-03-10 23:05:36
+    public List<Controller> getControllers() {
+        return controllers;
+    }
+
     /**
      * 获取 ComponentContext
      *
@@ -73,7 +82,16 @@ public class ComponentContext {
         // 遍历获取所有的组件名称
         List<String> componentNames = listAllComponentNames();
         // 通过依赖查找，实例化对象（ Tomcat BeanFactory setter 方法的执行，仅支持简单类型）
-        componentNames.forEach(name -> componentsMap.put(name, lookupComponent(name)));
+        componentNames.forEach(name -> {
+            Object component = lookupComponent(name);
+            componentsMap.put(name, component);
+
+            //lzm add 2021-03-10 23:05:11
+            if (component instanceof Controller) {
+                //如果component实现了Controller接口，则放入controllers集合中
+                controllers.add((Controller) component);
+            }
+        });
     }
 
     /**
@@ -206,6 +224,7 @@ public class ComponentContext {
     protected List<String> listComponentNames(String name) {
         return executeInContext(context -> {
             NamingEnumeration<NameClassPair> e = executeInContext(context, ctx -> ctx.list(name), true);
+            //NamingEnumeration<NameClassPair> e = context.list(name);
 
             // 目录 - Context
             // 节点 -

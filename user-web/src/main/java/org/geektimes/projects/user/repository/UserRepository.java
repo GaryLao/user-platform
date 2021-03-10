@@ -20,6 +20,7 @@ public interface UserRepository {
 
     User getById(Long userId);
 
+    //lzm add 2021-03-10 22:22:33
     User getByName(String userName);
 
     User getByNameAndPassword(String userName, String password);
