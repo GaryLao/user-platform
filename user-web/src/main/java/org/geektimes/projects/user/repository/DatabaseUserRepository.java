@@ -152,7 +152,7 @@ public class DatabaseUserRepository implements UserRepository {
 
                 // Boolean -> boolean
                 String methodName = preparedStatementMethodMappings.get(argType);
-                Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);
+                Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);  //lzm modify 2021-03-11 05:39:53
                 method.invoke(preparedStatement, i + 1, args[i]);
             }
             ResultSet resultSet = preparedStatement.executeQuery();

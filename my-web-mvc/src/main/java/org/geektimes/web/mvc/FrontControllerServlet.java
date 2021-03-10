@@ -54,10 +54,9 @@ public class FrontControllerServlet extends HttpServlet {
      * 利用 ServiceLoader 技术（Java SPI）
      */
     private void initHandleMethods() {
-        //ComponentContext componentContext = new ComponentContext();
-        //for (Controller controller : componentContext.getControllers()) {
-        for (Controller controller : ComponentContext.getInstance().getControllers()) {
-        //for (Controller controller : ServiceLoader.load(Controller.class)) {
+        //lzm modify 2021-03-11 05:39:29
+        for (Controller controller : ComponentContext.getInstance().getControllers()) {  //从context.xml获取Controller
+        //for (Controller controller : ServiceLoader.load(Controller.class)) {  //从import的类获取Controller
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
             String requestPath = pathFromClass.value();
