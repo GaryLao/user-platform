@@ -15,7 +15,7 @@ public interface UserService {
      * @return 成功返回<code>true</code>
      */
     @LocalTransactional
-    boolean register(User user);
+    boolean register(User user) throws Exception;
 
     /**
      * 注销用户

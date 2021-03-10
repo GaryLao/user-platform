@@ -47,6 +47,7 @@ public class RegisterController implements PageController {
                     user.setPhoneNumber(phonenumber);
 
                     if (!userService.register(user)) {
+                        request.setAttribute("REGISTER_FAIL_MESSAGE", "更新数据库失败");
                         return "register-false.jsp";
                     } else {
                         return "register-success.jsp";
@@ -54,9 +55,9 @@ public class RegisterController implements PageController {
                 }
             } catch (ConstraintViolationException throwable) {
                 request.setAttribute("REGISTER_FAIL_REASON", throwable.getConstraintViolations());
-                request.setAttribute("REGISTER_FAIL_MESSAGE", "填写格式错误");
+                request.setAttribute("REGISTER_FAIL_MESSAGE", "校验失败");
 
-                throwable.printStackTrace();
+                //throwable.printStackTrace();
                 return "register-false.jsp";
             } catch (Exception throwable) {
                 if (throwable.getMessage() == null){
@@ -65,7 +66,7 @@ public class RegisterController implements PageController {
                     request.setAttribute("REGISTER_FAIL_MESSAGE", throwable.getMessage());
                 }
 
-                throwable.printStackTrace();
+                //throwable.printStackTrace();
                 return "register-false.jsp";
             }
 

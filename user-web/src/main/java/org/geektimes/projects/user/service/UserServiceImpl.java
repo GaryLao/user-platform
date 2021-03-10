@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     // 默认需要事务
     @LocalTransactional
-    public boolean register(User user) {
+    public boolean register(User user) throws Exception {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
@@ -76,11 +76,11 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e) {
             transaction.rollback();
 
-            //throw new Exception(e);
-            e.printStackTrace();
+            throw new Exception(e);
+            //e.printStackTrace();
         }
 
-        return false;
+        return true;
     }
 
     @Override
