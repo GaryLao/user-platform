@@ -12,4 +12,4 @@
 - http://localhost:8080/register
 
 ## 查看UserMBean
-http://localhost:8080/jolokia/list/pojo-agent-user
+- http://localhost:8080/jolokia/list/pojo-agent-user
