@@ -7,6 +7,6 @@
 	<div class="container-lg">
 		<!-- Content here -->
 		Hello,World 2021
-		<a href="/register" type="button" class="btn btn-lg btn-primary btn-block">注册</a>
+		<a href="/user/register" type="button" class="btn btn-lg btn-primary btn-block">注册</a>
 	</div>
 </body>

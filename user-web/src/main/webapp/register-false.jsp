@@ -25,6 +25,6 @@
 		<div style="text-align: center"><%=sb.toString() %></div>
 		</c:if>
 
-		<a href="/register" type="button" class="btn btn-lg btn-primary btn-block">返回</a>
+		<a href="/user/register" type="button" class="btn btn-lg btn-primary btn-block">返回</a>
 	</div>
 </body>

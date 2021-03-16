@@ -10,3 +10,6 @@
 
 ##用户注册页面
 - http://localhost:8080/register
+
+##查看UserMBean
+http://localhost:8080/jolokia/list/pojo-agent-user

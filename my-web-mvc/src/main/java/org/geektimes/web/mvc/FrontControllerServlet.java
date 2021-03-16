@@ -1,12 +1,15 @@
 package org.geektimes.web.mvc;
 
 import org.apache.commons.lang.StringUtils;
+import org.geektimes.web.mvc.annotation.ValidatorProcessor;
 import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.controller.PageController;
 import org.geektimes.web.mvc.controller.RestController;
 import org.geektimes.web.mvc.header.CacheControlHeaderWriter;
 import org.geektimes.web.mvc.header.annotation.CacheControl;
+import org.geektimes.web.mvc.util.Utils;
+import org.geektimes.web.mvc.validator.ValidatorFactoryBean;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -16,11 +19,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -59,19 +65,28 @@ public class FrontControllerServlet extends HttpServlet {
         //for (Controller controller : ServiceLoader.load(Controller.class)) {  //从import的类获取Controller
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
-            String requestPath = pathFromClass.value();
-            Method[] publicMethods = controllerClass.getMethods();
-            // 处理方法支持的 HTTP 方法集合
-            for (Method method : publicMethods) {
-                Set<String> supportedHttpMethods = findSupportedHttpMethods(method);
-                Path pathFromMethod = method.getAnnotation(Path.class);
-                if (pathFromMethod != null) {
-                    requestPath += pathFromMethod.value();
+            if (pathFromClass != null) {
+                String requestPath = pathFromClass.value();
+                Method[] publicMethods = controllerClass.getMethods();
+                // 处理方法支持的 HTTP 方法集合
+                for (Method method : publicMethods) {
+                    Set<String> supportedHttpMethods = findSupportedHttpMethods(method);
+                    Path pathFromMethod = method.getAnnotation(Path.class);
+                    //if (pathFromMethod != null) {
+                    //    requestPath += pathFromMethod.value();
+                    //}
+                    if (!method.isAnnotationPresent(Path.class)) {
+                        continue;
+                    }
+                    requestPath+=method.getAnnotation(Path.class).value();
+
+                    //lzm modify 2021-03-16 17:25:20
+                    //handleMethodInfoMapping.put(requestPath, new HandlerMethodInfo(requestPath, method, supportedHttpMethods));
+                    HandlerMethodInfo handlerMethodInfo = findValidatorSupport(requestPath, method, supportedHttpMethods);
+                    handleMethodInfoMapping.put(requestPath, handlerMethodInfo);
                 }
-                handleMethodInfoMapping.put(requestPath,
-                        new HandlerMethodInfo(requestPath, method, supportedHttpMethods));
+                controllersMapping.put(requestPath, controller);
             }
-            controllersMapping.put(requestPath, controller);
         }
     }
 
@@ -96,6 +111,17 @@ public class FrontControllerServlet extends HttpServlet {
         }
 
         return supportedHttpMethods;
+    }
+
+    private HandlerMethodInfo findValidatorSupport(String requestPath,Method method,Set<String> methodSupport) {
+        if (method.isAnnotationPresent(ValidatorProcessor.class)) {
+            ValidatorProcessor annotation = method.getAnnotation(ValidatorProcessor.class);
+            Class<?> clazz = annotation.clazz();
+            String validateMethod = annotation.validateMethod();
+            return new HandlerMethodInfo(requestPath, method, methodSupport, clazz, validateMethod);
+        }else {
+            return new HandlerMethodInfo(requestPath, method, methodSupport);
+        }
     }
 
     /**
@@ -124,7 +150,6 @@ public class FrontControllerServlet extends HttpServlet {
         if (controller != null) {
 
             HandlerMethodInfo handlerMethodInfo = handleMethodInfoMapping.get(requestMappingPath);
-
             try {
                 if (handlerMethodInfo != null) {
 
@@ -134,6 +159,19 @@ public class FrontControllerServlet extends HttpServlet {
                         // HTTP 方法不支持
                         response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                         return;
+                    }
+
+                    //lzm add 2021-03-16 17:44:34
+                    if (handlerMethodInfo.getValidateMethod().equals(httpMethod)) {
+                        Set<? extends ConstraintViolation<?>> constraintViolations = validatorProcessor(request, handlerMethodInfo);
+                        //判断是否验证出错
+                        if (constraintViolations.size() != 0) {
+                            //writeValidResult(response, constraintViolations);
+                            //return;
+                            //throw new ConstraintViolationException(constraintViolations);
+                            request.setAttribute("REGISTER_FAIL_REASON", constraintViolations);
+                            request.setAttribute("REGISTER_FAIL_MESSAGE", "校验失败");
+                        }
                     }
 
                     if (controller instanceof PageController) {
@@ -150,7 +188,6 @@ public class FrontControllerServlet extends HttpServlet {
                         }
                         RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
                         requestDispatcher.forward(request, response);
-                        return;
                     } else if (controller instanceof RestController) {
                         // TODO
                     }
@@ -164,6 +201,28 @@ public class FrontControllerServlet extends HttpServlet {
                 }
             }
         }
+    }
+
+    private void writeValidResult(HttpServletResponse response, Set<? extends ConstraintViolation<?>> constraintViolations) throws IOException {
+        PrintWriter writer = response.getWriter();
+        constraintViolations.forEach(error->{
+            writer.println(error.getMessageTemplate());
+        });
+        writer.flush();
+        writer.close();
+    }
+
+    private Set<? extends ConstraintViolation<?>>  validatorProcessor(HttpServletRequest request, HandlerMethodInfo handlerMethodInfo) throws Exception {
+        if (handlerMethodInfo.isValidator()){
+            ValidatorFactoryBean component = ComponentContext.getInstance().getComponent("bean/ValidatorFactoryBean");
+            //try {
+                return component.validate(Utils.resolveParameter(request, handlerMethodInfo.getType()));
+            //} catch (Exception e) {
+                //e.printStackTrace();
+                //throw new Exception(e);
+            //}
+        }
+        return Collections.emptySet();
     }
 
 //    private void beforeInvoke(Method handleMethod, HttpServletRequest request, HttpServletResponse response) {

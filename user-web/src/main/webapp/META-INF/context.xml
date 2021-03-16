@@ -57,4 +57,11 @@
 			  type="org.geektimes.projects.user.repository.DatabaseUserRepository"
 			  factory="org.apache.naming.factory.BeanFactory" />
 
+	<Resource name="bean/ValidatorFactoryBean" auth="Container"
+			  type="org.geektimes.web.mvc.validator.ValidatorFactoryBean"
+			  factory="org.apache.naming.factory.BeanFactory" />
+
+	<!-- Tomcat JNDI 配置 -->
+	<Environment name="maxValue" value="12"
+				 type="java.lang.Integer" override="false"/>
 </Context>

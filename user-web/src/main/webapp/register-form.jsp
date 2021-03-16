@@ -24,10 +24,10 @@
 			<h1 class="h3 mb-3 font-weight-normal">注册</h1>
 
 			<label for="username" class="sr-only">用户名</label>
-			<input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名" required autofocus>
+			<input type="text" id="username" name="name" class="form-control" placeholder="请输入用户名" required autofocus>
 
 			<label for="userpassword" class="sr-only">登陆密码</label>
-			<input type="password" id="userpassword" name="userpassword" class="form-control" placeholder="请输入登陆密码" required>
+			<input type="password" id="userpassword" name="password" class="form-control" placeholder="请输入登陆密码" required>
 
 			<label for="email" class="sr-only">电子邮件</label>
 			<input type="text" id="email" name="email" class="form-control" placeholder="请输入电子邮件" required autofocus>

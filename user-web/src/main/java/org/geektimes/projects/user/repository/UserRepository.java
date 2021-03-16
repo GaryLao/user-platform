@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface UserRepository {
 
-    boolean save(User user);
+    boolean save(User user) throws Exception;
 
     boolean deleteById(Long userId);
 

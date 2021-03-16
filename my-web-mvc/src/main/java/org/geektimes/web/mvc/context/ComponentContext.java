@@ -193,7 +193,7 @@ public class ComponentContext {
         return result;
     }
 
-    protected <C> C lookupComponent(String name) {
+    public <C> C lookupComponent(String name) {
         return executeInContext(context -> (C) context.lookup(name));
     }
 
@@ -262,7 +262,7 @@ public class ComponentContext {
         Context context = null;
         try {
             context = new InitialContext();
-            this.envContext = (Context) context.lookup(COMPONENT_ENV_CONTEXT_NAME);
+            this.envContext = (Context) context.lookup(COMPONENT_ENV_CONTEXT_NAME);  //lookup在内存中查找，速度很快
         } catch (NamingException e) {
             throw new RuntimeException(e);
         } finally {
