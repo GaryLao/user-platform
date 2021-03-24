@@ -7,16 +7,17 @@
 ## 运行命令
 - mvn clean package -U
 - java -jar user-web/target/user-web-v1-SNAPSHOT-war-exec.jar
-
-## 用户注册页面
-- http://localhost:8080/register
-
-## 查看UserMBean
-- http://localhost:8080/jolokia/list/pojo-agent-user
-
+---
 ## 通过 ServletContext 获取 Config 数据的类
 - org.geektimes.web.mvc.FrontControllerServlet.service
 
 ## 在 doFilter 通过 ThreadLocal 把 Config 传递配置到 jsp
-  - org.geektimes.projects.user.web.filter.CharsetEncodingFilter.doFilter
-  - http://localhost:8080/
+- org.geektimes.projects.user.web.filter.CharsetEncodingFilter.doFilter
+- http://localhost:8080/
+---
+## 查看UserMBean
+- http://localhost:8080/jolokia/list/pojo-agent-user
+---
+## 用户注册页面
+- http://localhost:8080/register
+
