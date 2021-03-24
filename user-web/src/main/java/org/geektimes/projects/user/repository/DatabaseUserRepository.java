@@ -1,7 +1,8 @@
 package org.geektimes.projects.user.repository;
 
+import org.geektimes.context.ClassicComponentContext;
+//import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.web.mvc.function.ThrowableFunction;
-import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
@@ -45,17 +46,17 @@ public class DatabaseUserRepository implements UserRepository {
     private DBConnectionManager dbConnectionManager;
 
     public DatabaseUserRepository() {
-        this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
+        this.dbConnectionManager = ClassicComponentContext.getInstance().getComponent("bean/DBConnectionManager");
     }
 
     @PostConstruct
     public void init() {
-        this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
+        this.dbConnectionManager = ClassicComponentContext.getInstance().getComponent("bean/DBConnectionManager");
     }
 
     private Connection getConnection() {
         //if (this.dbConnectionManager == null){
-        //    this.dbConnectionManager = ComponentContext.getInstance().getComponent("bean/DBConnectionManager");
+        //    this.dbConnectionManager = ClassicComponentContext.getInstance().getComponent("bean/DBConnectionManager");
         //}
 
         return dbConnectionManager.getConnection();

@@ -13,3 +13,10 @@
 
 ## 查看UserMBean
 - http://localhost:8080/jolokia/list/pojo-agent-user
+
+## 通过 ServletContext 获取 Config 数据的类
+- org.geektimes.web.mvc.FrontControllerServlet.service
+
+## 在 doFilter 通过 ThreadLocal 把 Config 传递配置到 jsp
+  - org.geektimes.projects.user.web.filter.CharsetEncodingFilter.doFilter
+  - http://localhost:8080/

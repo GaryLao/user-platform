@@ -1,6 +1,7 @@
 package org.geektimes.projects.user.orm.jpa;
 
-import org.geektimes.web.mvc.context.ComponentContext;
+import org.geektimes.context.ClassicComponentContext;
+//import org.geektimes.web.mvc.context.ComponentContext;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
@@ -62,7 +63,7 @@ public class DelegatingEntityManager implements EntityManager {
             throw new RuntimeException(e);
         }
         // 增加 JNDI 引用处理
-        ComponentContext componentContext = ComponentContext.getInstance();
+        ClassicComponentContext componentContext = ClassicComponentContext.getInstance();
 
         for (String propertyName : properties.stringPropertyNames()) {
             String propertyValue = properties.getProperty(propertyName);

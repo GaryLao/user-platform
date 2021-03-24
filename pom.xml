@@ -13,6 +13,9 @@
     <modules>
         <module>my-web-mvc</module>
         <module>user-web</module>
+        <module>my-configuration</module>
+        <module>my-dependency-injection</module>
+        <module>my-rest-client</module>
     </modules>
 
     <properties>
@@ -24,6 +27,9 @@
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <javax.ws.rs-api.version>2.0.1</javax.ws.rs-api.version>
         <jstl.version>1.2</jstl.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+        <!-- 第三方开源依赖版本-->
         <commons-lang.version>2.6</commons-lang.version>
         <commons-validator.version>1.7</commons-validator.version>
         <commons-configuration.version>1.10</commons-configuration.version>
@@ -34,12 +40,16 @@
 
         <!-- MicroProfile 版本-->
         <microprofile-config-api.version>2.0</microprofile-config-api.version>
+        <microprofile-rest-client-api.version>2.0</microprofile-rest-client-api.version>
 
         <!-- jolokia 版本 -->
         <jolokia-core.version>1.6.2</jolokia-core.version>
         <jolokia-client-java.version>1.6.2</jolokia-client-java.version>
 
         <pojo-mbean.version>1.1</pojo-mbean.version>
+
+        <!-- Testing 版本 -->
+        <junit.version>4.13</junit.version>
 
         <!-- Maven Plugins 版本 -->
         <maven.compiler.version>3.8.1</maven.compiler.version>
@@ -75,6 +85,13 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
                 <version>${jstl.version}</version>
+            </dependency>
+
+            <!-- Java Commons Annotations -->
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax.annotation-api.version}</version>
             </dependency>
 
             <dependency>
@@ -132,6 +149,20 @@
                 <groupId>org.eclipse.microprofile.config</groupId>
                 <artifactId>microprofile-config-api</artifactId>
                 <version>${microprofile-config-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.microprofile.rest.client</groupId>
+                <artifactId>microprofile-rest-client-api</artifactId>
+                <version>${microprofile-rest-client-api.version}</version>
+            </dependency>
+
+            <!-- JUnit -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- https://mvncentral.com/artifact/org.jolokia/jolokia-war -->
@@ -217,7 +248,13 @@
 <!--                    <groupId>org.apache.tomcat.maven</groupId>-->
 <!--                    <artifactId>tomcat8-maven-plugin</artifactId>-->
 <!--                    <version>3.0-r1756463</version>-->
-
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.derby</groupId>
+                            <artifactId>derby</artifactId>
+                            <version>${derby.version}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>tomcat-run</id>
@@ -229,6 +266,7 @@
                             <configuration>
                                 <!-- ServletContext 路径 -->
                                 <path>/</path>
+                                <enableNaming>true</enableNaming>
                             </configuration>
                         </execution>
                     </executions>

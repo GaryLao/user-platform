@@ -1,8 +1,11 @@
 package org.geektimes.web.mvc;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.apache.commons.lang.StringUtils;
+import org.geektimes.context.ClassicComponentContext;
 import org.geektimes.web.mvc.annotation.ValidatorProcessor;
-import org.geektimes.web.mvc.context.ComponentContext;
+//import org.geektimes.web.mvc.context.ComponentContext;
 import org.geektimes.web.mvc.controller.Controller;
 import org.geektimes.web.mvc.controller.PageController;
 import org.geektimes.web.mvc.controller.RestController;
@@ -11,6 +14,7 @@ import org.geektimes.web.mvc.header.annotation.CacheControl;
 import org.geektimes.web.mvc.util.Utils;
 import org.geektimes.web.mvc.validator.ValidatorFactoryBean;
 
+import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -35,6 +39,9 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.substringAfter;
 
 public class FrontControllerServlet extends HttpServlet {
+    //不能通过注入的方式，因为新的请求会产生新的HttpServlet
+    //@Resource(name="bean/ValidatorFactoryBean")
+    //private ValidatorFactoryBean validatorFactoryBean;
 
     /**
      * 请求路径和 Controller 的映射关系缓存
@@ -61,8 +68,8 @@ public class FrontControllerServlet extends HttpServlet {
      */
     private void initHandleMethods() {
         //lzm modify 2021-03-11 05:39:29
-        for (Controller controller : ComponentContext.getInstance().getControllers()) {  //从context.xml获取Controller
-        //for (Controller controller : ServiceLoader.load(Controller.class)) {  //从import的类获取Controller
+        //for (Controller controller : ClassicComponentContext.getInstance().getControllers()) {  //从context.xml获取Controller
+        for (Controller controller : ServiceLoader.load(Controller.class)) {  //从import的类获取Controller
             Class<?> controllerClass = controller.getClass();
             Path pathFromClass = controllerClass.getAnnotation(Path.class);
             if (pathFromClass != null) {
@@ -135,6 +142,16 @@ public class FrontControllerServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        //通过 ServletContext 获取 Config 数据 //lzm add 2021-03-25 03:36:44
+        ClassLoader classLoader = request.getServletContext().getClassLoader();
+        ConfigProviderResolver configProviderResolver = ConfigProviderResolver.instance();
+        Config config = configProviderResolver.getConfig(classLoader);
+        String application_name = config.getConfigValue("application.name").getValue();
+        System.out.println("---------ServletContext get config-----------");
+        System.out.println("application.name=" + application_name);
+        System.out.println("=============================================");
+
         // 建立映射关系
         // requestURI = /a/hello/world
         String requestURI = request.getRequestURI();
@@ -162,7 +179,7 @@ public class FrontControllerServlet extends HttpServlet {
                     }
 
                     //lzm add 2021-03-16 17:44:34
-                    if (handlerMethodInfo.getValidateMethod().equals(httpMethod)) {
+                    if (handlerMethodInfo.getValidateMethod() != null && handlerMethodInfo.getValidateMethod().equals(httpMethod)) {
                         Set<? extends ConstraintViolation<?>> constraintViolations = validatorProcessor(request, handlerMethodInfo);
                         //判断是否验证出错
                         if (constraintViolations.size() != 0) {
@@ -177,6 +194,7 @@ public class FrontControllerServlet extends HttpServlet {
                     if (controller instanceof PageController) {
                         PageController pageController = PageController.class.cast(controller);
                         String viewPath = pageController.execute(request, response);
+
                         // 页面请求 forward
                         // request -> RequestDispatcher forward
                         // RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewPath);
@@ -201,6 +219,7 @@ public class FrontControllerServlet extends HttpServlet {
                 }
             }
         }
+
     }
 
     private void writeValidResult(HttpServletResponse response, Set<? extends ConstraintViolation<?>> constraintViolations) throws IOException {
@@ -214,9 +233,10 @@ public class FrontControllerServlet extends HttpServlet {
 
     private Set<? extends ConstraintViolation<?>>  validatorProcessor(HttpServletRequest request, HandlerMethodInfo handlerMethodInfo) throws Exception {
         if (handlerMethodInfo.isValidator()){
-            ValidatorFactoryBean component = ComponentContext.getInstance().getComponent("bean/ValidatorFactoryBean");
+            ValidatorFactoryBean validatorFactoryBean = ClassicComponentContext.getInstance().getComponent("bean/ValidatorFactoryBean");
+
             //try {
-                return component.validate(Utils.resolveParameter(request, handlerMethodInfo.getType()));
+                return validatorFactoryBean.validate(Utils.resolveParameter(request, handlerMethodInfo.getType()));
             //} catch (Exception e) {
                 //e.printStackTrace();
                 //throw new Exception(e);
