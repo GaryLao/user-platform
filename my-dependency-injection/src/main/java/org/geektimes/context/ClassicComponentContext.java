@@ -58,6 +58,7 @@ public class ClassicComponentContext implements ComponentContext {
     }
 
     public void init(ServletContext servletContext) throws RuntimeException {
+        System.out.println("---ClassicComponentContext.init---");
         ClassicComponentContext.servletContext = servletContext;
         servletContext.setAttribute(CONTEXT_NAME, this);
         this.init();

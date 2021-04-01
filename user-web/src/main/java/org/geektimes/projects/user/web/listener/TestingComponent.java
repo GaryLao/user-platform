@@ -43,6 +43,7 @@ public class TestingComponent {
 
     @PostConstruct
     public void sendMessage() throws Throwable {
+        System.out.println(">>>>>>>>>>>>");
         // Create a messages
         String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
         ActiveMQTextMessage message = new ActiveMQTextMessage();
