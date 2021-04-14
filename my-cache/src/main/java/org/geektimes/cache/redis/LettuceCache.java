@@ -15,11 +15,13 @@ import java.util.Set;
 public class LettuceCache <K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
 
     private final RedisCommands<String, String> syncCommands;
+    private final StatefulRedisConnection<String, String> connection;
 
     public LettuceCache(CacheManager cacheManager, String cacheName,
-                        Configuration<K, V> configuration, RedisCommands<String, String> syncCommands) {
+                        Configuration<K, V> configuration, StatefulRedisConnection<String, String> connection) {
         super(cacheManager, cacheName, configuration);
-        this.syncCommands = syncCommands;
+        this.connection = connection;
+        this.syncCommands = this.connection.sync();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class LettuceCache <K extends Serializable, V extends Serializable> exten
 
     @Override
     protected void doClose() {
-        //
+        this.connection.close();
     }
 
     // 是否可以抽象出一套序列化和反序列化的 API
