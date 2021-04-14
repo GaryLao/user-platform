@@ -8,6 +8,12 @@
 - mvn clean package -U
 - java -jar user-web/target/user-web-v1-SNAPSHOT-war-exec.jar
 ---
+## 抽象 API 实现对象的序列化和反序列化
+- org.geektimes.cache.util.SerializationObjUtil
+## 通过 Lettuce 实现一套 Redis CacheManager 以及 Cache
+- org.geektimes.cache.redis.LettuceCacheManager
+- org.geektimes.cache.redis.LettuceCache
+---
 ## 通过 ServletContext 获取 Config 数据的类
 - org.geektimes.web.mvc.FrontControllerServlet.service
 

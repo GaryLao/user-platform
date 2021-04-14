@@ -34,6 +34,12 @@
             <artifactId>commons-lang</artifactId>
         </dependency>
 
+        <!-- Ext add -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -47,10 +53,7 @@
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-        </dependency>
+
 
     </dependencies>
 </project>

@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class ImmutableWebTarget implements WebTarget {
+    // 注意：UriBuilder 是 1.有状态的数据 2.是线程不安全的  //lzm add 2021-04-10 09:22:13
 
     private final UriBuilder uriBuilder;
 

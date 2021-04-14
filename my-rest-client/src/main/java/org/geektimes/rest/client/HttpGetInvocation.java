@@ -71,21 +71,23 @@ class HttpGetInvocation implements Invocation {
             setRequestHeaders(connection);
             // TODO Set the cookies
             int statusCode = connection.getResponseCode();
-//            Response.ResponseBuilder responseBuilder = Response.status(statusCode);
-//
-//            responseBuilder.build();
+
+            // 返回类型还不能确认，而 ResponseBuilder 又不能保存状态，所以 ResponseBuilder 没什么用  //lzm add 2021-04-10 10:39:59
+            // Response.ResponseBuilder responseBuilder = Response.status(statusCode);
+            // responseBuilder.build();
+
+            // Response.Status status = Response.Status.fromStatusCode(statusCode);
+            // switch (status) {
+            //     case OK:  //case Response.Status.OK
+            //         break;
+            //     default:
+            //         break;
+            // }
+
             DefaultResponse response = new DefaultResponse();
             response.setConnection(connection);
             response.setStatus(statusCode);
             return response;
-//            Response.Status status = Response.Status.fromStatusCode(statusCode);
-//            switch (status) {
-//                case Response.Status.OK:
-//
-//                    break;
-//                default:
-//                    break;
-//            }
 
         } catch (IOException e) {
             // TODO Error handler
