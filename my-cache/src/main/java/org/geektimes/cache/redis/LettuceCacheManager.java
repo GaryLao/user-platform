@@ -15,13 +15,11 @@ import java.util.Properties;
 public class LettuceCacheManager extends AbstractCacheManager {
 
     private final RedisClient redisClient;
-    private final StatefulRedisConnection<String, String> connection;
 
     public LettuceCacheManager(CachingProvider cachingProvider, URI uri, ClassLoader classLoader, Properties properties) {
         super(cachingProvider, uri, classLoader, properties);
 
         this.redisClient = RedisClient.create(RedisURI.create(uri));  // "redis://localhost:6379/0"
-        this.connection = redisClient.connect();
     }
 
     @Override
