@@ -35,7 +35,7 @@ public class CompositeFallbackStorageTest {
 
     private CompositeFallbackStorage instance = new CompositeFallbackStorage();
 
-    @Test
+    // @Test //lzm comm 2021-04-22 13:47:23
     public void writeAllAndLoadAll() {
         instance.writeAll(asList(ExpirableEntry.of("a", 1), ExpirableEntry.of("b", 2), ExpirableEntry.of("c", 3)));
 

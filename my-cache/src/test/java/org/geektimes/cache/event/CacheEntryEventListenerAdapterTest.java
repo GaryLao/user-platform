@@ -35,7 +35,7 @@ import java.lang.reflect.Proxy;
  */
 public class CacheEntryEventListenerAdapterTest {
 
-    @Test
+    // @Test //lzm comm 2021-04-22 13:47:23
     public void testOnEvent() {
         TestCacheEntryListener listener = new TestCacheEntryListener();
 
