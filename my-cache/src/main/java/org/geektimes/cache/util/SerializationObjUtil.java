@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * lzm add 2021-04-14 13:10:34
  * @Description: 对象序列化工具类
  */
 public class SerializationObjUtil {

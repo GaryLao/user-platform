@@ -12,6 +12,9 @@ import javax.cache.spi.CachingProvider;
 import java.net.URI;
 import java.util.Properties;
 
+/**
+ * lzm add 2021-04-14 13:10:34
+ * */
 public class LettuceCacheManager extends AbstractCacheManager {
 
     private final RedisClient redisClient;

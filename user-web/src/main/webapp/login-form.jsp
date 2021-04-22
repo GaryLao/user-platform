@@ -1,5 +1,6 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<jsp:directive.include file="/WEB-INF/jsp/prelude/include-head-meta.jspf" />
+	<jsp:directive.include file="/WEB-INF/jsp/prelude/include-head-meta.jspf" />
 	<title>My Home Page</title>
     <style>
       .bd-placeholder-img {
@@ -38,5 +39,9 @@
 				in</button>
 			<p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
 		</form>
+
+<%--		<div th:align="center">--%>
+<%--			<a th:href="@{/oauth2/authorization/gitee}">gitee</a>--%>
+<%--		</div>--%>
 	</div>
 </body>

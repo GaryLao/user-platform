@@ -8,6 +8,9 @@
 - mvn clean package -U
 - java -jar user-web/target/user-web-v1-SNAPSHOT-war-exec.jar
 ---
+## Github OAuth2 认证
+- http://localhost:8080/
+---
 ## 抽象 API 实现对象的序列化和反序列化
 - org.geektimes.cache.util.SerializationObjUtil
 ## 通过 Lettuce 实现一套 Redis CacheManager 以及 Cache
