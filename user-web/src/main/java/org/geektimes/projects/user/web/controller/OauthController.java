@@ -41,7 +41,7 @@ public class OauthController implements PageController {
 
         Map<String, String> map = new HashMap<>();
         map.put("client_id", "0e30270bcec0b4e2b6a7");
-        map.put("client_secret", "b36ef4c522d2fd6677c94aed84453d0950b5aa67");
+        map.put("client_secret", "");
         map.put("state", request.getParameter("state"));
         map.put("code", request.getParameter("code"));
         map.put("redirect_uri", "http://localhost:8080/oauth/redirect");
