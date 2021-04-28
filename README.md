@@ -8,6 +8,16 @@
 - mvn clean package -U
 - java -jar user-web/target/user-web-v1-SNAPSHOT-war-exec.jar
 ---
+## 解决多个 WebSecurityConfigurerAdapter Bean 配置相互冲突的问题
+- 修改了 org.geektimes.projects.user.web.security.SecurityConfig
+  > 去掉@Configuration
+  
+- 修改了 org.geektimes.projects.user.web.security.SecurityConfig2
+  > 加上@Override
+  > 
+  > 加上了super.configure(httpSecurity); // 合并2个HTTP配置
+
+---
 ## Github OAuth2 认证
 - http://localhost:8080/
 ---
