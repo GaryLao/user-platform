@@ -18,7 +18,10 @@
         <module>my-rest-client</module>
         <module>my-reactive-messaging</module>
         <module>my-cache</module>
+        <module>my-interceptor</module>
         <module>user-data</module>
+        <module>my-commons</module>
+        <module>my-session</module>
     </modules>
 
     <properties>
@@ -56,6 +59,9 @@
         <tomcat7.version>7.0.37</tomcat7.version>
         <lettuce.version>6.1.0.RELEASE</lettuce.version>
         <jedis.version>3.5.2</jedis.version>
+        <mybatis.version>3.5.7</mybatis.version>
+        <mybatis-spring.version>2.0.6</mybatis-spring.version>
+
         <lombok.version>1.18.20</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
 
@@ -308,6 +314,19 @@
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-all</artifactId>
                 <version>${activemq.version}</version>
+            </dependency>
+
+            <!-- MyBatis -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
 
             <!-- Apache Tomcat -->
